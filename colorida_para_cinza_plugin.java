@@ -32,7 +32,7 @@ public class colorida_para_cinza_plugin implements PlugIn {
 		ImagePlus imagem = IJ.getImage();
 		ImageProcessor processador = imagem.getProcessor();
 		int pixel[]  = new int[3];
-		
+	
 		ImagePlus avg = IJ.createImage("avg", "8-bit", processador.getWidth(), processador.getHeight(), 1);
 		ImageProcessor procAvg = avg.getProcessor();
 		ImagePlus lum0 = IJ.createImage("lum0", "8-bit", processador.getWidth(), processador.getHeight(), 1);
