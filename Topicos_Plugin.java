@@ -1,11 +1,15 @@
+
+
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.PlugIn;
+import ij.process.ImageProcessor;
 
 	 
 public class Topicos_Plugin implements PlugIn {
 	public void run(String arg) {
 		ImagePlus imagem = IJ.getImage();
+		ImageProcessor processador = imagem.getProcessor();
 		/*  8-bit grayscale (unsigned)
 		public static final int GRAY8 = 0;
 
@@ -21,7 +25,12 @@ public class Topicos_Plugin implements PlugIn {
 		/** 32-bit RGB color 
 		public static final int COLOR_RGB = 4; */
 		
-			System.out.println(imagem.getType());
+		
+		if(imagem.getT) {
+			
+		}
+		
+		
 			
 		
 	}
