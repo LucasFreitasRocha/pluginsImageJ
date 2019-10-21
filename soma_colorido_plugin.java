@@ -35,6 +35,7 @@ public class soma_colorido_plugin implements PlugIn {
 		int pixelImage1[] = new int[3];
 		int pixelImage2[] = new int[3];
 		
+		
 		for(int i = 0; i < processador1.getWidth(); i++){
 			for(int j= 0; j < processador1.getHeight(); j++){
 				 pixelImage1 =   processador1.getPixel(i, j, pixelImage1 );

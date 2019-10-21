@@ -1,39 +1,46 @@
+
+
 import ij.IJ;
 import ij.ImagePlus;
+import ij.WindowManager;
 import ij.plugin.PlugIn;
 import ij.process.ImageProcessor;
+
 	 
 public class clarear_Plugin_misto implements PlugIn {
-	
-	public int validar(int aux) {
-		if(aux >255) {
-			return 255;
-		}
-		if(aux < 0) {
-			return 0;
-		}
-		return  aux;
-	}
-	public void clarear_gray() {
-		
-	}
 	public void run(String arg) {
 		ImagePlus imagem = IJ.getImage();
 		ImageProcessor processador = imagem.getProcessor();
-		float pixel;
+		/*  8-bit grayscale (unsigned)
+		public static final int GRAY8 = 0;
+
+	 	16-bit grayscale (unsigned) 
+		public static final int GRAY16 = 1;
+
+		/** 32-bit floating-point grayscale 
+		public static final int GRAY32 = 2;
+
+		/** 8-bit indexed color 
+		public static final int COLOR_256 = 3;
+
+		/** 32-bit RGB color 
+		public static final int COLOR_RGB = 4; */
 		
-		for(int i = 0; i < processador.getWidth(); i++){
-			for(int j= 0; j < processador.getHeight(); j++){
-				 pixel = (float) processador.getPixel(i, j);
-				 if((pixel * 1.5) > 255){
-					 processador.putPixel(i, j, 255);
-				 }else{
-					 pixel =  (float) (pixel * 1.5);
-					 processador.putPixel(i, j, (int) pixel );
-				 }
+		
+		if(imagem.getType() == ImagePlus.COLOR_RGB){
+			System.out.println("imagem rgb");
+			
+			System.out.println(imagem.getTitle());
+		}else{
+			if(imagem.getType() == ImagePlus.GRAY8 || imagem.getType() == ImagePlus.GRAY16 || imagem.getType() == ImagePlus.GRAY32  ){
+				System.out.println("preto e branca");
+				
+				System.out.println(imagem.getTitle());
+				
 			}
 		}
-		imagem.updateAndDraw();
+		
+					
 	}
 }
 
