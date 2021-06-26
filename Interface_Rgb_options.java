@@ -151,7 +151,20 @@ public class Interface_Rgb_options implements  PlugIn, DialogListener {
             }
         }
 		
-		
+		//Dessaturacao
+		 for (int i = 0; i < processador.getWidth(); i++) {
+	            for (int j = 0; j < processador.getHeight(); j++) {
+	                pixel = duplicate.getPixel(i, j, pixel);
+
+	                float mediaPixels = (pixel[0] + pixel[1] + pixel[2]) / 3;
+
+	                for(int rgb = 0; rgb < pixel.length; rgb++) {
+	                    pixel[rgb] = (int) mediaPixels + (int) ( sliderDesolarizacao * ( pixel[rgb] - (int) mediaPixels ) ) ;
+	                }
+
+	                duplicate.putPixel(i, j, pixel);
+	            }
+	        }
 		this.imagem.setProcessor(duplicate);
 		this.imagem.updateAndDraw();
 
