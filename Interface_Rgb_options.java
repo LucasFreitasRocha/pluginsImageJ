@@ -9,7 +9,7 @@ import ij.process.ImageProcessor;
 
 public class Interface_Rgb_options implements  PlugIn, DialogListener {
 
-	// incompleto professor
+	
 	private ImagePlus imagem;
 	private ImageProcessor processador;
 	private ImageProcessor duplicate;
