@@ -32,6 +32,9 @@ public class Interface_Rgb_options implements  PlugIn, DialogListener {
 		interfaceGrafica.addCheckbox("Gerar nova imagem ?", true);
 		interfaceGrafica.addSlider("Brilho", -255, 255, 0, 1);
 		interfaceGrafica.addSlider("Contraste", 0, 255, 0, 1);
+		interfaceGrafica.addSlider("Solarização  No Pixel mínimo: ", 0, 255, 0, 1);
+        interfaceGrafica.addSlider("Solarização  No Pixel No máximo: ", 0, 255, 0, 1);
+        interfaceGrafica.addSlider("Configurar Desaturação: ", 0, 1, 1, 0.1);
 		interfaceGrafica.showDialog();
 		
 		if (interfaceGrafica.wasCanceled()) {
@@ -80,8 +83,11 @@ public class Interface_Rgb_options implements  PlugIn, DialogListener {
 		if (interfaceGrafica.wasCanceled()) return false;
 		int sliderBrilho = (int) interfaceGrafica.getNextNumber();
 		int sliderContraste = (int) interfaceGrafica.getNextNumber();
+		int sliderSolarizacaoMinima = (int) interfaceGrafica.getNextNumber();
+	    int sliderSolarizacaoMaxima = (int) interfaceGrafica.getNextNumber();
+	    float sliderDesolarizacao = (float) interfaceGrafica.getNextNumber();
 	
-		alterarImagem(sliderBrilho,sliderContraste);
+		alterarImagem(sliderBrilho,sliderContraste, sliderSolarizacaoMinima, sliderSolarizacaoMaxima, sliderDesolarizacao );
 		/* juntar alteracoes em um metodo só */
         
         IJ.log("slider 1: "  + sliderBrilho );
@@ -89,52 +95,63 @@ public class Interface_Rgb_options implements  PlugIn, DialogListener {
         IJ.log("\n");
         return true;
     }
+	
+	private int validarPixel(int pixel) {
+		 if(pixel < 0){
+			 pixel = 0;
+		 }
+		 if(pixel > 255){
+			 pixel = 255;
+		 }
+		 return pixel;
+	}
 
-	private void alterarImagem(int sliderBrilho, int sliderContraste) {
+	private void alterarImagem(int sliderBrilho, int sliderContraste, int sliderSolarizacaoMinima, int sliderSolarizacaoMaxima, float sliderDesolarizacao) {
 		// TODO Auto-generated method stub
 		this.imagem.setProcessor(this.processador);
 		int c = sliderContraste;
 		int pixel[]  = new int[3];
 		int f  = (259 * (c + 255))/(255*(259-c));
 		duplicate = this.processador.duplicate();
+		
+		// constrate
 		for(int i = 0; i < processador.getWidth(); i++){
 			for(int j= 0; j < processador.getHeight(); j++){
 				pixel =   processador.getPixel(i, j, pixel );
 				for(int rgb = 0 ; rgb < 3 ; rgb++ ){
 					 pixel[rgb] = (f * (pixel[rgb] - 128)) + 128; 
-					 if(pixel[rgb] < 0){
-						 pixel[rgb] = 0;
-					 }
-					 if(pixel[rgb] > 255){
-						 pixel[rgb] = 255;
-					 }
-					 if(pixel[rgb] > 0 && pixel[rgb] < 255){
-						 pixel[rgb] = pixel[rgb];
-					 }
+					 pixel[rgb] = validarPixel(pixel[rgb]);
 				 }	 
 				duplicate.putPixel(i, j, pixel);
 			}
 		}
 		
-		
+		// brilho
 		for(int i = 0; i < processador.getWidth(); i++){
 			for(int j= 0; j < processador.getHeight(); j++){
 				pixel =   duplicate.getPixel(i, j, pixel );
 				for(int rgb = 0 ; rgb < 3 ; rgb++ ){
 					 pixel[rgb] += sliderBrilho;  
-					 if(pixel[rgb] < 0){
-						 pixel[rgb] = 0;
-					 }
-					 if(pixel[rgb] > 255){
-						 pixel[rgb] = 255;
-					 }
-					 if(pixel[rgb] > 0 && pixel[rgb] < 255){
-						 pixel[rgb] = pixel[rgb];
-					 }
+					 pixel[rgb] = validarPixel(pixel[rgb]);
 				 }	 
 				duplicate.putPixel(i, j, pixel);
 			}
 		}
+		// Solarizacao
+		for (int i = 0; i < processador.getWidth(); i++) {
+            for (int j = 0; j < processador.getHeight(); j++) {
+                pixel = duplicate.getPixel(i, j, pixel);
+
+                for (int rgb = 0; rgb < 3; rgb++) {
+                    if ((pixel[rgb] > sliderSolarizacaoMinima) && (pixel[rgb] < sliderSolarizacaoMaxima)) {
+                        pixel[rgb] = 255 - pixel[rgb];
+                    }
+                }
+                duplicate.putPixel(i, j, pixel);
+            }
+        }
+		
+		
 		this.imagem.setProcessor(duplicate);
 		this.imagem.updateAndDraw();
 
